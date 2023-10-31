@@ -13,13 +13,13 @@ blink.elf: main.o startup.o system_stm32f4xx.o
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $^ -o blink.elf
 
 main.o: main.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) main.c -c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
 
 startup.o: startup.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) startup.c -c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
 
 system_stm32f4xx.o: CMSIS/cmsis_device_f4/Source/Templates/system_stm32f4xx.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
 
 .PHONY: clean
 clean:
