@@ -1,4 +1,6 @@
 toolchain/
+.vscode/
 
 *elf
 *bin
+*o
