@@ -1,8 +1,8 @@
 CC=arm-none-eabi-gcc
 CFLAGS=-mcpu=cortex-m4 -mthumb -nostdlib
 CPPFLAGS=-DSTM32F411xE \
-	-ICMSIS/CMSIS_5/CMSIS/Core/Include \
-	-ICMSIS/cmsis_device_f4/Include \
+	-Iplatform/cmsis/CMSIS_5/CMSIS/Core/Include \
+	-Iplatform/cmsis/cmsis_device_f4/Include \
 	-Idisplay
 
 
@@ -20,7 +20,7 @@ main.o: main.c
 startup.o: startup.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
 
-system_stm32f4xx.o: CMSIS/cmsis_device_f4/Source/Templates/system_stm32f4xx.c
+system_stm32f4xx.o: platform/cmsis/cmsis_device_f4/Source/Templates/system_stm32f4xx.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
 
 display.o: display/display.c
