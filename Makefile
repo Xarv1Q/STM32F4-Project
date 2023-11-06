@@ -2,14 +2,16 @@ CC=arm-none-eabi-gcc
 CFLAGS=-mcpu=cortex-m4 -mthumb -nostdlib
 CPPFLAGS=-DSTM32F411xE \
 	-ICMSIS/CMSIS_5/CMSIS/Core/Include \
-	-ICMSIS/cmsis_device_f4/Include
+	-ICMSIS/cmsis_device_f4/Include \
+	-Idisplay
+
 
 LINKER_FILE=linker_script.ld
 LDFLAGS=-T $(LINKER_FILE)
 
 all: blink.elf
 
-blink.elf: main.o startup.o system_stm32f4xx.o
+blink.elf: main.o startup.o system_stm32f4xx.o display.o
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $^ -o blink.elf
 
 main.o: main.c
@@ -21,6 +23,9 @@ startup.o: startup.c
 system_stm32f4xx.o: CMSIS/cmsis_device_f4/Source/Templates/system_stm32f4xx.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
 
+display.o: display/display.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
+	
 .PHONY: clean
 clean:
 	rm -f *.o *.elf

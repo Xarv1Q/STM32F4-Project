@@ -1,6 +1,5 @@
-#include "stm32f411xe.h"
+#include "display.h"
 
-#define LED_PIN 6
 void init_clock(void){
     volatile uint32_t dummy;
 
@@ -13,8 +12,8 @@ void init_clock(void){
     dummy = RCC->APB1ENR;
     dummy = RCC->APB1ENR;
 
-    //Enable IO Port B clock
-    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+    //Enable IO Port C clock
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
     PWR->CR |= PWR_CR_VOS_Msk;
     
     // Configure flash controller
@@ -63,6 +62,7 @@ void delay_ms(uint32_t milliseconds)
   while (ticks < end);
 }
 
+
 int main(){
     init_clock();
     
@@ -70,15 +70,13 @@ int main(){
     __enable_irq();
 
 
-
-    //Set pin 6 & 9 as output
-    GPIOB->MODER |= GPIO_MODER_MODE6_0;
-    GPIOB->MODER |= GPIO_MODER_MODE9_0; 
-
-    GPIOB->ODR = (1 << 9);
+    GPIOC->MODER |= GPIO_MODER_MODE0_0 | GPIO_MODER_MODE1_0 | GPIO_MODER_MODE2_0 | GPIO_MODER_MODE3_0 | GPIO_MODER_MODE4_0 \
+                    | GPIO_MODER_MODE5_0 | GPIO_MODER_MODE6_0 | GPIO_MODER_MODE7_0 | GPIO_MODER_MODE8_0 | GPIO_MODER_MODE9_0 \
+                    | GPIO_MODER_MODE10_0 | GPIO_MODER_MODE11_0;
+    
     while(1){
-        delay_ms(500);
-        GPIOB->ODR ^= (1 << LED_PIN);
+      print_number(ticks);
+      delay_ms(2);
     }
     
 }
