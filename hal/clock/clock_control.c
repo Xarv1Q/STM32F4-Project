@@ -1,4 +1,4 @@
-#include "display.h"
+#include "clock_control.h"
 
 void init_clock(void){
     volatile uint32_t dummy;
@@ -42,6 +42,7 @@ void init_clock(void){
     while (! (RCC->CFGR & RCC_CFGR_SWS_PLL));
 }
 
+
 uint32_t ticks;
 
 void systick_handler()
@@ -60,23 +61,4 @@ void delay_ms(uint32_t milliseconds)
   }
 
   while (ticks < end);
-}
-
-
-int main(){
-    init_clock();
-    
-    SysTick_Config(100000);
-    __enable_irq();
-
-
-    GPIOC->MODER |= GPIO_MODER_MODE0_0 | GPIO_MODER_MODE1_0 | GPIO_MODER_MODE2_0 | GPIO_MODER_MODE3_0 | GPIO_MODER_MODE4_0 \
-                    | GPIO_MODER_MODE5_0 | GPIO_MODER_MODE6_0 | GPIO_MODER_MODE7_0 | GPIO_MODER_MODE8_0 | GPIO_MODER_MODE9_0 \
-                    | GPIO_MODER_MODE10_0 | GPIO_MODER_MODE11_0;
-    
-    while(1){
-      print_number(ticks);
-      delay_ms(2);
-    }
-    
 }

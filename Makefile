@@ -3,29 +3,38 @@ CFLAGS=-mcpu=cortex-m4 -mthumb -nostdlib
 CPPFLAGS=-DSTM32F411xE \
 	-Iplatform/cmsis/CMSIS_5/CMSIS/Core/Include \
 	-Iplatform/cmsis/cmsis_device_f4/Include \
-	-Idisplay
+	-Iplatform \
+	-Ihal/clock \
+	-Ihal/display \
+	-Ihal/gpio 
 
 
-LINKER_FILE=linker_script.ld
+LINKER_FILE=platform/linker_script.ld
 LDFLAGS=-T $(LINKER_FILE)
 
 all: blink.elf
 
-blink.elf: main.o startup.o system_stm32f4xx.o display.o
+blink.elf: main.o startup.o system_stm32f4xx.o display.o clock_control.o gpio_control.o
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $^ -o blink.elf
 
-main.o: main.c
+main.o: application/main.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
 
-startup.o: startup.c
+startup.o: platform/startup.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
 
 system_stm32f4xx.o: platform/cmsis/cmsis_device_f4/Source/Templates/system_stm32f4xx.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
 
-display.o: display/display.c
+display.o: hal/display/display.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
-	
+
+clock_control.o: hal/clock/clock_control.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
+
+gpio_control.o: hal/gpio/gpio_control.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
+
 .PHONY: clean
 clean:
 	rm -f *.o *.elf

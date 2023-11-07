@@ -1,10 +1,3 @@
-/*
-    Driver for 7-segment display
-    Capabilities:
-    TBF
-*/
-#include "stm32f411xe.h"
-
 #define DISP_PIN_A 6
 #define DISP_PIN_B 4
 #define DISP_PIN_C 3
@@ -18,7 +11,3 @@
 #define DISP_PIN_COM2 10
 #define DISP_PIN_COM3 9
 #define DISP_PIN_COM4 8
-
-void reset_display(void);
-
-void print_number(uint32_t num);
