@@ -1,0 +1,1 @@
+#define TICKS_PER_INTERRUPT 100000 // When clock is 100Mhz, this will cause interrupts to happen every 1ms

@@ -40,8 +40,9 @@ void init_clock(void){
     // Select PLL output as system clock
     RCC->CFGR |= (RCC_CFGR_SW_PLL << RCC_CFGR_SW_Pos);
     while (! (RCC->CFGR & RCC_CFGR_SWS_PLL));
-}
 
+    SysTick_Config(TICKS_PER_INTERRUPT);
+}
 
 uint32_t ticks;
 
