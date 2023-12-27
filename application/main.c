@@ -1,6 +1,7 @@
 #include "clock_control.h"
 #include "display.h"
 #include "gpio_control.h"
+#include "lis35de.h"
 
 extern uint32_t ticks;
 
@@ -9,12 +10,29 @@ int main(){
 
     init_clock();
   
-    GPIOC->MODER |= GPIO_MODER_MODE0_0 | GPIO_MODER_MODE1_0 | GPIO_MODER_MODE2_0 | GPIO_MODER_MODE3_0 | GPIO_MODER_MODE4_0 \
-                    | GPIO_MODER_MODE5_0 | GPIO_MODER_MODE6_0 | GPIO_MODER_MODE7_0 | GPIO_MODER_MODE8_0 | GPIO_MODER_MODE9_0 \
-                    | GPIO_MODER_MODE10_0 | GPIO_MODER_MODE11_0;
+    init_display();
     
+    lis35de_init();
+    
+    uint8_t rxdata[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    uint8_t txdata[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    txdata[0] = 0x20;
+    txdata[1] = 0b01000111; // Enable output reading
+    CS_Enable();
+    lis35de_send(&txdata,2);
+    CS_Disable();
+
+
     while(1){
-      print_number(ticks);
+
+      CS_Enable();
+      txdata[0] = 0x2d | 0x80;
+      lis35de_send(&txdata,1);
+      lis35de_receive(&rxdata, 1);
+
+      CS_Disable();
+      print_number(rxdata[0]);
+      delay_ms(10);
     }
     
 }

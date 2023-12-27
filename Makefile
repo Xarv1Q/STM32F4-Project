@@ -6,7 +6,9 @@ CPPFLAGS=-DSTM32F411xE \
 	-Iplatform \
 	-Ihal/clock \
 	-Ihal/display \
-	-Ihal/gpio 
+	-Ihal/gpio \
+	-Ihal/spi \
+	-Ihal/lis35de
 
 
 LINKER_FILE=platform/linker_script.ld
@@ -14,7 +16,7 @@ LDFLAGS=-T $(LINKER_FILE)
 
 all: blink.elf
 
-blink.elf: main.o startup.o system_stm32f4xx.o display.o clock_control.o gpio_control.o
+blink.elf: main.o startup.o system_stm32f4xx.o display.o clock_control.o gpio_control.o spi.o lis35de.o
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS) $^ -o blink.elf
 
 main.o: application/main.c
@@ -33,6 +35,12 @@ clock_control.o: hal/clock/clock_control.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
 
 gpio_control.o: hal/gpio/gpio_control.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
+
+spi.o: hal/spi/spi.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
+
+lis35de.o: hal/lis35de/lis35de.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -c -o $@
 
 .PHONY: clean

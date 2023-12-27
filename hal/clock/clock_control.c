@@ -9,11 +9,15 @@ void init_clock(void){
     
     //Enable power controller
     RCC->APB1ENR |= RCC_APB1ENR_PWREN_Msk;
+    RCC->APB2ENR |= RCC_APB2ENR_SPI1EN_Msk;
     dummy = RCC->APB1ENR;
     dummy = RCC->APB1ENR;
-
+    dummy = RCC->APB2ENR;
+    dummy = RCC->APB2ENR;
     //Enable IO Port C clock
     RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+    RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
     PWR->CR |= PWR_CR_VOS_Msk;
     
     // Configure flash controller
@@ -26,13 +30,10 @@ void init_clock(void){
     
     // Set PLLM, PLLN and PLLP, and select HSE as PLL source
     RCC->PLLCFGR |= ((4 << RCC_PLLCFGR_PLLM_Pos) | 
-                    (200 << RCC_PLLCFGR_PLLN_Pos) |
+                    (160 << RCC_PLLCFGR_PLLN_Pos) |
                     (1 << RCC_PLLCFGR_PLLP_Pos) |
                     (1 << RCC_PLLCFGR_PLLSRC_Pos));
-    
-    // Set APB1 prescaler to 2
-    RCC->CFGR |= (0b100 << RCC_CFGR_PPRE1_Pos);
-    
+
     // Enable PLL and wait for ready
     RCC->CR |= RCC_CR_PLLON_Msk;
     while (! (RCC->CR & RCC_CR_PLLRDY_Msk));
